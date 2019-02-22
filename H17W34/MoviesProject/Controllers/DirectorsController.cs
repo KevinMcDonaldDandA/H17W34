@@ -9,7 +9,9 @@
 */
 
 using MoviesProject.Models;
+using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Web.Mvc;
 
 namespace MoviesProject.Controllers
@@ -43,6 +45,35 @@ namespace MoviesProject.Controllers
                 return RedirectToAction("Index");
             }
 
+            return View(director);
+        }
+
+        // GET: Directors/Edit/5
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Director director = db.Directors.Find(id);
+            if (director == null)
+            {
+                return HttpNotFound();
+            }
+            return View(director);
+        }
+
+        // POST: Directors/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(Director director)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(director).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
             return View(director);
         }
 

@@ -18,10 +18,12 @@ namespace MoviesProject.Models
 
         [Required(ErrorMessage ="A Firstname is Required for a Director")]
         [StringLength(25)]
+        [Display(Name ="Firstname")]
         public string FName { get; set; }
 
         [Required(ErrorMessage = "A Surname is Required for a Director")]
         [StringLength(50)]
+        [Display(Name = "Surname")]
         public string LName { get; set; }
     }
 }

@@ -9,6 +9,7 @@
 */
 
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MoviesProject.Models
 {
@@ -25,6 +26,13 @@ namespace MoviesProject.Models
         [StringLength(50)]
         [Display(Name = "Surname")]
         public string LName { get; set; }
+
+        [NotMapped]
+        public string Fullname {
+            get {
+                return string.Format("{0} {1}", FName , LName);
+            }
+        }
     }
 }
 //------------------------------- End of File -------------------------------​

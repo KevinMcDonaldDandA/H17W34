@@ -40,6 +40,21 @@ namespace MoviesProject.Controllers
             return View(md);
         }
 
+        // GET: Movies/Details/5
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Movie movie = db.Movies.Include(m => m.Director).Where(m => m.ID == id).SingleOrDefault();
+            if (movie == null)
+            {
+                return HttpNotFound();
+            }
+            return View(movie);
+        }
+
         // POST: Movies/Create
         [HttpPost]
         [ValidateAntiForgeryToken]

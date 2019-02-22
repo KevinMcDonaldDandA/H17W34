@@ -16,6 +16,7 @@ namespace MoviesProject.Models
         public AppDbContext() : base("name=AppDbContext") { }
 
         public DbSet<Director> Directors { get; set; }
+        public DbSet<Movie> Movies { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder) { }
     }

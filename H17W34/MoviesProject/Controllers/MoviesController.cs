@@ -12,6 +12,7 @@ using MoviesProject.Models;
 using MoviesProject.ViewModels;
 using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Web.Mvc;
 
 namespace MoviesProject.Controllers
@@ -51,6 +52,45 @@ namespace MoviesProject.Controllers
                 return RedirectToAction("Index");
             }
 
+            MovieDirectors md = new MovieDirectors
+            {
+                Movie = movie,
+                Directors = db.Directors.ToList()
+            };
+            return View(md);
+        }
+
+        // GET: Movies/Edit/5
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Movie movie = db.Movies.Find(id);
+            if (movie == null)
+            {
+                return HttpNotFound();
+            }
+            MovieDirectors md = new MovieDirectors
+            {
+                Movie = movie,
+                Directors = db.Directors.ToList()
+            };
+            return View(md);
+        }
+
+        // POST: Movies/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(Movie movie)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(movie).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
             MovieDirectors md = new MovieDirectors
             {
                 Movie = movie,

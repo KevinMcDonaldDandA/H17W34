@@ -77,6 +77,32 @@ namespace MoviesProject.Controllers
             return View(director);
         }
 
+        // GET: Directors/Delete/5
+        public ActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Director director = db.Directors.Find(id);
+            if (director == null)
+            {
+                return HttpNotFound();
+            }
+            return View(director);
+        }
+
+        // POST: Directors/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            Director director = db.Directors.Find(id);
+            db.Directors.Remove(director);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

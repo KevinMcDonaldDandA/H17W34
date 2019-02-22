@@ -27,6 +27,21 @@ namespace MoviesProject.Controllers
             return View(directors);
         }
 
+        // GET: Directors/Details/5
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Director director = db.Directors.Find(id);
+            if (director == null)
+            {
+                return HttpNotFound();
+            }
+            return View(director);
+        }
+
         // GET: Directors/Create
         public ActionResult Create()
         {

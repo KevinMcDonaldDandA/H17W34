@@ -23,7 +23,28 @@ namespace MoviesProject.Controllers
         {
             var directors = db.Directors.ToList();
             return View(directors);
-        }        
+        }
+
+        // GET: Directors/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Directors/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(Director director)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Directors.Add(director);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            return View(director);
+        }
 
         protected override void Dispose(bool disposing)
         {

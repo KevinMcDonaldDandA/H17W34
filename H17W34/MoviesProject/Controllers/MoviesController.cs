@@ -62,9 +62,18 @@ namespace MoviesProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Movies.Add(movie);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                bool movieExists = db.Movies.Where(m => m.Title.Equals(movie.Title, System.StringComparison.InvariantCultureIgnoreCase)).Count() > 0;
+                if (movieExists)
+                {
+                    ModelState.AddModelError(string.Empty, "Movie already exists in Database");
+                    return View(movie);
+                }
+                else
+                {
+                    db.Movies.Add(movie);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
 
             MovieDirectors md = new MovieDirectors

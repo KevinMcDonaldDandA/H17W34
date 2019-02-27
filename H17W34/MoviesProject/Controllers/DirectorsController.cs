@@ -55,9 +55,19 @@ namespace MoviesProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Directors.Add(director);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                bool directorExists = db.Directors.Where(d => d.FName.Equals(director.FName, System.StringComparison.InvariantCultureIgnoreCase) && d.LName.Equals(director.LName, System.StringComparison.InvariantCultureIgnoreCase)).Count() > 0;
+                if (directorExists)
+                {
+                    ModelState.AddModelError(string.Empty, "Director Already Exists");
+                    return View(director);
+                }
+                else
+                {
+                    db.Directors.Add(director);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                
             }
 
             return View(director);

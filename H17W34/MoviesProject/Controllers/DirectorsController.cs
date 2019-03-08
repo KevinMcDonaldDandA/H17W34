@@ -74,7 +74,7 @@ namespace MoviesProject.Controllers
                 
             }
 
-            return View(director);
+            return View();
         }
 
         // GET: Directors/Edit/5

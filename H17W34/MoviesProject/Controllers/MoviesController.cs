@@ -19,12 +19,17 @@ namespace MoviesProject.Controllers
 {
     public class MoviesController : Controller
     {
-        private AppDbContext db = new AppDbContext();
+        private IMovieRepository context;
+
+        public MoviesController()
+        {
+            context = new EFMovieRepository();
+        }
 
         // GET: Movies
         public ActionResult Index()
         {
-            var movies = db.Movies.Include(m => m.Director);
+            var movies = context.Movies.Include(m => m.Director);
             return View(movies.ToList());
         }
 
@@ -35,7 +40,7 @@ namespace MoviesProject.Controllers
             MovieDirectors md = new MovieDirectors
             {
                 Movie = new Movie(),
-                Directors = db.Directors.ToList()
+                Directors = context.Directors.ToList()
             };
             return View(md);
         }
@@ -47,7 +52,7 @@ namespace MoviesProject.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = db.Movies.Include(m => m.Director).Where(m => m.ID == id).SingleOrDefault();
+            Movie movie = context.Movies.Include(m => m.Director).Where(m => m.ID == id).SingleOrDefault();
             if (movie == null)
             {
                 return HttpNotFound();
@@ -62,7 +67,7 @@ namespace MoviesProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                bool movieExists = db.Movies.Where(m => m.Title.Equals(movie.Title, System.StringComparison.InvariantCultureIgnoreCase)).Count() > 0;
+                bool movieExists = context.Movies.Where(m => m.Title.Equals(movie.Title, System.StringComparison.InvariantCultureIgnoreCase)).Count() > 0;
                 if (movieExists)
                 {
                     ModelState.AddModelError(string.Empty, "Movie already exists in Database");
@@ -70,8 +75,7 @@ namespace MoviesProject.Controllers
                 }
                 else
                 {
-                    db.Movies.Add(movie);
-                    db.SaveChanges();
+                    context.Save(movie);
                     return RedirectToAction("Index");
                 }
             }
@@ -79,7 +83,7 @@ namespace MoviesProject.Controllers
             MovieDirectors md = new MovieDirectors
             {
                 Movie = movie,
-                Directors = db.Directors.ToList()
+                Directors = context.Directors.ToList()
             };
             return View(md);
         }
@@ -91,7 +95,7 @@ namespace MoviesProject.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = db.Movies.Find(id);
+            Movie movie = context.Find((int)id);
             if (movie == null)
             {
                 return HttpNotFound();
@@ -99,7 +103,7 @@ namespace MoviesProject.Controllers
             MovieDirectors md = new MovieDirectors
             {
                 Movie = movie,
-                Directors = db.Directors.ToList()
+                Directors = context.Directors.ToList()
             };
             return View(md);
         }
@@ -111,14 +115,13 @@ namespace MoviesProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(movie).State = EntityState.Modified;
-                db.SaveChanges();
+                context.Save(movie);
                 return RedirectToAction("Index");
             }
             MovieDirectors md = new MovieDirectors
             {
                 Movie = movie,
-                Directors = db.Directors.ToList()
+                Directors = context.Directors.ToList()
             };
             return View(md);
         }
@@ -130,7 +133,7 @@ namespace MoviesProject.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = db.Movies.Find(id);
+            Movie movie = context.Find((int)id);
             if (movie == null)
             {
                 return HttpNotFound();
@@ -143,18 +146,14 @@ namespace MoviesProject.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Movie movie = db.Movies.Find(id);
-            db.Movies.Remove(movie);
-            db.SaveChanges();
+            Movie movie = context.Find(id);
+            context.Delete(movie);
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+            context.Dispose(disposing);
             base.Dispose(disposing);
         }
     }

@@ -18,12 +18,17 @@ namespace MoviesProject.Controllers
 {
     public class DirectorsController : Controller
     {
-        private AppDbContext db = new AppDbContext();
+        private IDirectorRepository context;
+
+        public DirectorsController()
+        {
+            context = new EFDirectorRepository();
+        }
 
         // GET: Directors
         public ActionResult Index()
         {
-            var directors = db.Directors.ToList();
+            var directors = context.Directors.ToList();
             return View(directors);
         }
 
@@ -34,7 +39,7 @@ namespace MoviesProject.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Director director = db.Directors.Find(id);
+            Director director = context.Find((int)id);
             if (director == null)
             {
                 return HttpNotFound();
@@ -55,7 +60,7 @@ namespace MoviesProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                bool directorExists = db.Directors.Where(d => d.FName.Equals(director.FName, System.StringComparison.InvariantCultureIgnoreCase) && d.LName.Equals(director.LName, System.StringComparison.InvariantCultureIgnoreCase)).Count() > 0;
+                bool directorExists = context.Directors.Where(d => d.FName.Equals(director.FName, System.StringComparison.InvariantCultureIgnoreCase) && d.LName.Equals(director.LName, System.StringComparison.InvariantCultureIgnoreCase)).Count() > 0;
                 if (directorExists)
                 {
                     ModelState.AddModelError(string.Empty, "Director Already Exists");
@@ -63,8 +68,7 @@ namespace MoviesProject.Controllers
                 }
                 else
                 {
-                    db.Directors.Add(director);
-                    db.SaveChanges();
+                    context.Save(director);
                     return RedirectToAction("Index");
                 }
                 
@@ -80,7 +84,7 @@ namespace MoviesProject.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Director director = db.Directors.Find(id);
+            Director director = context.Find((int)id);
             if (director == null)
             {
                 return HttpNotFound();
@@ -95,8 +99,7 @@ namespace MoviesProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(director).State = EntityState.Modified;
-                db.SaveChanges();
+                context.Save(director);
                 return RedirectToAction("Index");
             }
             return View(director);
@@ -109,7 +112,7 @@ namespace MoviesProject.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Director director = db.Directors.Find(id);
+            Director director = context.Find((int)id);
             if (director == null)
             {
                 return HttpNotFound();
@@ -122,18 +125,14 @@ namespace MoviesProject.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Director director = db.Directors.Find(id);
-            db.Directors.Remove(director);
-            db.SaveChanges();
+            Director director = context.Find((int)id);
+            context.Delete(director);
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+            context.Dispose(disposing);
             base.Dispose(disposing);
         }
     }

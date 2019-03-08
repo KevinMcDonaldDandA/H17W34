@@ -1,8 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿/*
+*  File	    EFMovieRepository.cs
+*  Author	Kevin McDonald, Dundee & Angus College, kevin.mcdonald@dundeeandangus.ac.uk
+*  Date     8th March 2019
+*  Purpose	Concrete Implementation for the Movie Repository using Entity Framework
+*  Notes    
+*
+*       Copyright © Kevin McDonald 2019. All rights reserved.
+*/
 using System.Data.Entity;
+using System.Linq;
 
 namespace MoviesProject.Models
 {
@@ -57,3 +63,4 @@ namespace MoviesProject.Models
         }
     }
 }
+//------------------------------- End of File -------------------------------​

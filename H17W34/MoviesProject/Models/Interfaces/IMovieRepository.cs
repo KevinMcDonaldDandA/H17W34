@@ -1,8 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿/*
+*  File	    IMovieRepository.cs
+*  Author	Kevin McDonald, Dundee & Angus College, kevin.mcdonald@dundeeandangus.ac.uk
+*  Date     8th March 2019
+*  Purpose	Interface Methods for the Movie Repositories
+*  Notes    
+*
+*       Copyright © Kevin McDonald 2019. All rights reserved.
+*/
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MoviesProject.Models
 {
@@ -18,3 +23,4 @@ namespace MoviesProject.Models
         bool CheckMovieExits(string title);
     }
 }
+//------------------------------- End of File -------------------------------​

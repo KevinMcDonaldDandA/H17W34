@@ -1,13 +1,18 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿/*
+*  File	    MoviesControllerTests.cs
+*  Author	Kevin McDonald, Dundee & Angus College, kevin.mcdonald@dundeeandangus.ac.uk
+*  Date     8th March 2019
+*  Purpose	The Test class for our MovieController 
+*  Notes    This class is responsible for the testing the controller Actions.
+*           It uses the Moq framework for mocking test data.
+*
+*       Copyright © Kevin McDonald 2019. All rights reserved.
+*/
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using MoviesProject.Controllers;
 using MoviesProject.Models;
 using MoviesProject.ViewModels;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace MoviesProject.Controllers.Tests
@@ -102,3 +107,4 @@ namespace MoviesProject.Controllers.Tests
         }
     }
 }
+//------------------------------- End of File -------------------------------​

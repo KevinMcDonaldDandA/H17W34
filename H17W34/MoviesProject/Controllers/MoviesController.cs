@@ -26,6 +26,11 @@ namespace MoviesProject.Controllers
             context = new EFMovieRepository();
         }
 
+        public MoviesController(IMovieRepository mock)
+        {
+            context = mock;
+        }
+
         // GET: Movies
         public ActionResult Index()
         {
@@ -52,7 +57,7 @@ namespace MoviesProject.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = context.Movies.Include(m => m.Director).Where(m => m.ID == id).SingleOrDefault();
+            Movie movie = context.GetMovieDetails(id);
             if (movie == null)
             {
                 return HttpNotFound();
@@ -67,7 +72,7 @@ namespace MoviesProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                bool movieExists = context.Movies.Where(m => m.Title.Equals(movie.Title, System.StringComparison.InvariantCultureIgnoreCase)).Count() > 0;
+                bool movieExists = context.CheckMovieExits(movie.Title);
                 if (movieExists)
                 {
                     ModelState.AddModelError(string.Empty, "Movie already exists in Database");

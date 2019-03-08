@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MoviesProject.Models
 {
-    interface IMovieRepository
+    public interface IMovieRepository
     {
         IQueryable<Movie> Movies { get; }
         IQueryable<Director> Directors { get; }
@@ -14,5 +14,7 @@ namespace MoviesProject.Models
         Movie Find(int id);
         void Delete(Movie movie);
         void Dispose(bool disposing);
+        Movie GetMovieDetails(int? id);
+        bool CheckMovieExits(string title);
     }
 }

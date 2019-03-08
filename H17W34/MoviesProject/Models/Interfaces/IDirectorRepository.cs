@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MoviesProject.Models
 {
-    interface IDirectorRepository
+    public interface IDirectorRepository
     {
         IQueryable<Director> Directors { get; }
         Director Save(Director director);

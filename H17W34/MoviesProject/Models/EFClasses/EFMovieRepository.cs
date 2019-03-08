@@ -14,6 +14,11 @@ namespace MoviesProject.Models
 
         public IQueryable<Director> Directors { get { return db.Directors; } }
 
+        public bool CheckMovieExits(string title)
+        {
+            return db.Movies.Where(m => m.Title.Equals(title, System.StringComparison.InvariantCultureIgnoreCase)).Count() > 0;
+        }
+
         public void Delete(Movie movie)
         {
             db.Movies.Remove(movie);
@@ -31,6 +36,11 @@ namespace MoviesProject.Models
         public Movie Find(int id)
         {
             return db.Movies.Find(id);
+        }
+
+        public Movie GetMovieDetails(int? id)
+        {
+            return db.Movies.Include(m => m.Director).Where(m => m.ID == id).SingleOrDefault();
         }
 
         public Movie Save(Movie movie)

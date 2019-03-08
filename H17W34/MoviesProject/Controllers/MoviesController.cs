@@ -72,11 +72,17 @@ namespace MoviesProject.Controllers
         {
             if (ModelState.IsValid)
             {
+                MovieDirectors md = new MovieDirectors
+                {
+                    Movie = movie,
+                    Directors = context.Directors.ToList()
+                };
+
                 bool movieExists = context.CheckMovieExits(movie.Title);
                 if (movieExists)
                 {
                     ModelState.AddModelError(string.Empty, "Movie already exists in Database");
-                    return View(movie);
+                    return View(md);
                 }
                 else
                 {
@@ -85,12 +91,7 @@ namespace MoviesProject.Controllers
                 }
             }
 
-            MovieDirectors md = new MovieDirectors
-            {
-                Movie = movie,
-                Directors = context.Directors.ToList()
-            };
-            return View(md);
+            return View();
         }
 
         // GET: Movies/Edit/5

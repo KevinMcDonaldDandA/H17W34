@@ -27,6 +27,10 @@ namespace MoviesProject.Models
         [Display(Name = "Surname")]
         public string LName { get; set; }
 
+        [Display(Name = "Date of Birth")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        public System.DateTime DoB { get; set; }
+
         [NotMapped]
         public string Fullname {
             get {

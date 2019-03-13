@@ -25,15 +25,17 @@ namespace MoviesProject.Controllers.Tests
         public void Index_ContainsAListofCustomers_Success()
         {
             //  Arrange
-            Mock<IMovieRepository> mock = new Mock<IMovieRepository>();
-            mock.Setup(m => m.Movies).Returns(new Movie[]
+            Mock<IMovieRepository> movieMock = new Mock<IMovieRepository>();
+            Mock<IDirectorRepository> directorMock = new Mock<IDirectorRepository>();
+
+            movieMock.Setup(m => m.Movies).Returns(new Movie[]
             {
                 new Movie{ ID = 1, DirectorId = 1, Title = "Test Movie 1", UserRating = 1.0 },
                 new Movie{ ID = 2, DirectorId = 2, Title = "Test Movie 2", UserRating = 2.0 },
                 new Movie{ ID = 3, DirectorId = 3, Title = "Test Movie 3", UserRating = 3.0 }
             }.AsQueryable());
 
-            MoviesController controller = new MoviesController(mock.Object);
+            MoviesController controller = new MoviesController(movieMock.Object, directorMock.Object);
 
             //  Act
             var result = controller.Index() as ViewResult;
@@ -48,14 +50,16 @@ namespace MoviesProject.Controllers.Tests
         public void Create_ContainsViewModel_Success()
         {
             //  Arrange
-            Mock<IMovieRepository> mock = new Mock<IMovieRepository>();
-            mock.Setup(m => m.Directors).Returns(new Director[]
+            Mock<IMovieRepository> movieMock = new Mock<IMovieRepository>();
+            Mock<IDirectorRepository> directorMock = new Mock<IDirectorRepository>();
+
+            directorMock.Setup(m => m.Directors).Returns(new Director[]
             {
                 new Director{ ID = 1, FName = "FTest1", LName = "LTest1"},
                 new Director{ ID = 2, FName = "FTest2", LName = "LTest2"},
             }.AsQueryable());
 
-            MoviesController controller = new MoviesController(mock.Object);
+            MoviesController controller = new MoviesController(movieMock.Object ,directorMock.Object);
 
             //  Act
             var result = controller.Create() as ViewResult;
@@ -69,14 +73,16 @@ namespace MoviesProject.Controllers.Tests
         public void Create_ViewModelHasDirectors_Success()
         {
             //  Arrange
-            Mock<IMovieRepository> mock = new Mock<IMovieRepository>();
-            mock.Setup(m => m.Directors).Returns(new Director[]
+            Mock<IMovieRepository> movieMock = new Mock<IMovieRepository>();
+            Mock<IDirectorRepository> directorMock = new Mock<IDirectorRepository>();
+
+            directorMock.Setup(m => m.Directors).Returns(new Director[]
             {
                 new Director{ ID = 1, FName = "FTest1", LName = "LTest1"},
                 new Director{ ID = 2, FName = "FTest2", LName = "LTest2"},
             }.AsQueryable());
 
-            MoviesController controller = new MoviesController(mock.Object);
+            MoviesController controller = new MoviesController(movieMock.Object, directorMock.Object);
             int expected = 2;
 
             //  Act
@@ -92,11 +98,13 @@ namespace MoviesProject.Controllers.Tests
         public void Details_ContainsMovieModel()
         {
             //  Arrange
-            Mock<IMovieRepository> mock = new Mock<IMovieRepository>();
-            int id = 1;
-            mock.Setup(m => m.GetMovieDetails(id)).Returns(new Movie { ID = 1 });
+            Mock<IMovieRepository> movieMock = new Mock<IMovieRepository>();
+            Mock<IDirectorRepository> directorMock = new Mock<IDirectorRepository>();
 
-            MoviesController controller = new MoviesController(mock.Object);
+            int id = 1;
+            movieMock.Setup(m => m.GetMovieDetails(id)).Returns(new Movie { ID = 1 });
+
+            MoviesController controller = new MoviesController(movieMock.Object, directorMock.Object);
 
             //  Act
             var result = controller.Details(1) as ViewResult;
@@ -104,6 +112,91 @@ namespace MoviesProject.Controllers.Tests
 
             //  Assert
             Assert.IsNotNull(actual);
+        }
+
+        [TestMethod]
+        public void Edit_IdIsNull_ReturnBadRequest()
+        {
+            //  Arrange
+            Mock<IMovieRepository> movieMock = new Mock<IMovieRepository>();
+            Mock<IDirectorRepository> directorMock = new Mock<IDirectorRepository>();
+
+            MoviesController controller = new MoviesController(movieMock.Object, directorMock.Object);
+            var expected = 400;
+
+            //  Act
+            var result = controller.Edit((int?)null) as HttpStatusCodeResult;
+            var actual = result.StatusCode;
+
+            //  Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void Edit_IdIsvalid_MovieReturnedInsideViewModel()
+        {
+            //  Arrange
+            Mock<IMovieRepository> movieMock = new Mock<IMovieRepository>();
+            Mock<IDirectorRepository> directorMock = new Mock<IDirectorRepository>();
+            movieMock.Setup(m => m.Find(1)).Returns(new Movie {
+                ID = 1,
+                Title = "Test Movie",
+                Summary = "Test Movie Summary"
+            });
+
+            MoviesController controller = new MoviesController(movieMock.Object, directorMock.Object);
+            var expected = "Test Movie";
+
+            //  Act
+            var result = controller.Edit(1) as ViewResult;
+            var model = result.Model as MovieDirectors;
+            var actual = model.Movie.Title;
+
+            //  Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void Delete_IdIsNull_ReturnBadRequest()
+        {
+            //  Arrange
+            Mock<IMovieRepository> movieMock = new Mock<IMovieRepository>();
+            Mock<IDirectorRepository> directorMock = new Mock<IDirectorRepository>();
+
+            MoviesController controller = new MoviesController(movieMock.Object, directorMock.Object);
+            var expected = 400;
+
+            //  Act
+            var result = controller.Delete((int?)null) as HttpStatusCodeResult;
+            var actual = result.StatusCode;
+
+            //  Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void Delete_IdIsvalid_MovieReturned()
+        {
+            //  Arrange
+            Mock<IMovieRepository> movieMock = new Mock<IMovieRepository>();
+            Mock<IDirectorRepository> directorMock = new Mock<IDirectorRepository>();
+            movieMock.Setup(m => m.Find(1)).Returns(new Movie
+            {
+                ID = 1,
+                Title = "Test Movie",
+                Summary = "Test Movie Summary"
+            });
+
+            MoviesController controller = new MoviesController(movieMock.Object, directorMock.Object);
+            var expected = "Test Movie";
+
+            //  Act
+            var result = controller.Delete(1) as ViewResult;
+            var movie = result.Model as Movie;
+            var actual = movie.Title;
+
+            //  Assert
+            Assert.AreEqual(expected, actual);
         }
     }
 }

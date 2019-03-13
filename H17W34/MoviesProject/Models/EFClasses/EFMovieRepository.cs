@@ -18,8 +18,6 @@ namespace MoviesProject.Models
 
         public IQueryable<Movie> Movies { get { return db.Movies; } }
 
-        public IQueryable<Director> Directors { get { return db.Directors; } }
-
         public bool CheckMovieExits(string title)
         {
             return db.Movies.Where(m => m.Title.Equals(title, System.StringComparison.InvariantCultureIgnoreCase)).Count() > 0;

@@ -14,7 +14,6 @@ namespace MoviesProject.Models
     public interface IMovieRepository
     {
         IQueryable<Movie> Movies { get; }
-        IQueryable<Director> Directors { get; }
         Movie Save(Movie movie);
         Movie Find(int id);
         void Delete(Movie movie);

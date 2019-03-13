@@ -19,22 +19,25 @@ namespace MoviesProject.Controllers
 {
     public class MoviesController : Controller
     {
-        private IMovieRepository context;
+        private IMovieRepository movieRepository;
+        private IDirectorRepository directorRepository;
 
         public MoviesController()
         {
-            context = new EFMovieRepository();
+            movieRepository = new EFMovieRepository();
+            directorRepository = new EFDirectorRepository();
         }
 
-        public MoviesController(IMovieRepository mock)
+        public MoviesController(IMovieRepository mockMovieRepo, IDirectorRepository mockDirectorRepo)
         {
-            context = mock;
+            movieRepository = mockMovieRepo;
+            directorRepository = mockDirectorRepo;
         }
 
         // GET: Movies
         public ActionResult Index()
         {
-            var movies = context.Movies.Include(m => m.Director);
+            var movies = movieRepository.Movies.Include(m => m.Director);
             return View(movies.ToList());
         }
 
@@ -45,7 +48,7 @@ namespace MoviesProject.Controllers
             MovieDirectors md = new MovieDirectors
             {
                 Movie = new Movie(),
-                Directors = context.Directors.ToList()
+                Directors = directorRepository.Directors.ToList()
             };
             return View(md);
         }
@@ -57,7 +60,7 @@ namespace MoviesProject.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = context.GetMovieDetails(id);
+            Movie movie = movieRepository.GetMovieDetails(id);
             if (movie == null)
             {
                 return HttpNotFound();
@@ -75,10 +78,10 @@ namespace MoviesProject.Controllers
                 MovieDirectors md = new MovieDirectors
                 {
                     Movie = movie,
-                    Directors = context.Directors.ToList()
+                    Directors = directorRepository.Directors.ToList()
                 };
 
-                bool movieExists = context.CheckMovieExits(movie.Title);
+                bool movieExists = movieRepository.CheckMovieExits(movie.Title);
                 if (movieExists)
                 {
                     ModelState.AddModelError(string.Empty, "Movie already exists in Database");
@@ -86,7 +89,7 @@ namespace MoviesProject.Controllers
                 }
                 else
                 {
-                    context.Save(movie);
+                    movieRepository.Save(movie);
                     return RedirectToAction("Index");
                 }
             }
@@ -101,7 +104,7 @@ namespace MoviesProject.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = context.Find((int)id);
+            Movie movie = movieRepository.Find((int)id);
             if (movie == null)
             {
                 return HttpNotFound();
@@ -109,7 +112,7 @@ namespace MoviesProject.Controllers
             MovieDirectors md = new MovieDirectors
             {
                 Movie = movie,
-                Directors = context.Directors.ToList()
+                Directors = directorRepository.Directors.ToList()
             };
             return View(md);
         }
@@ -121,13 +124,13 @@ namespace MoviesProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                context.Save(movie);
+                movieRepository.Save(movie);
                 return RedirectToAction("Index");
             }
             MovieDirectors md = new MovieDirectors
             {
                 Movie = movie,
-                Directors = context.Directors.ToList()
+                Directors = directorRepository.Directors.ToList()
             };
             return View(md);
         }
@@ -139,7 +142,7 @@ namespace MoviesProject.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Movie movie = context.Find((int)id);
+            Movie movie = movieRepository.Find((int)id);
             if (movie == null)
             {
                 return HttpNotFound();
@@ -152,14 +155,14 @@ namespace MoviesProject.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Movie movie = context.Find(id);
-            context.Delete(movie);
+            Movie movie = movieRepository.Find(id);
+            movieRepository.Delete(movie);
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
-            context.Dispose(disposing);
+            movieRepository.Dispose(disposing);
             base.Dispose(disposing);
         }
     }

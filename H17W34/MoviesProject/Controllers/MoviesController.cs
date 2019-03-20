@@ -10,6 +10,7 @@
 
 using MoviesProject.Models;
 using MoviesProject.ViewModels;
+using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -35,9 +36,15 @@ namespace MoviesProject.Controllers
         }
 
         // GET: Movies
-        public ActionResult Index()
+        // Reference Documentation for Search Functionality: https://docs.microsoft.com/en-us/aspnet/mvc/overview/getting-started/introduction/adding-search
+        public ActionResult Index(string search)
         {
             var movies = movieRepository.Movies.Include(m => m.Director);
+            if (!String.IsNullOrEmpty(search))
+            {
+                movies = movies.Where(s => s.Title.Contains(search));
+                ViewBag.Search = true;
+            }
             return View(movies.ToList());
         }
 

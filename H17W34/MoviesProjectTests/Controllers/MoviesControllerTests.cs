@@ -38,7 +38,7 @@ namespace MoviesProject.Controllers.Tests
             MoviesController controller = new MoviesController(movieMock.Object, directorMock.Object);
 
             //  Act
-            var result = controller.Index() as ViewResult;
+            var result = controller.Index(null) as ViewResult;
             var actual = result.Model;
 
             //  Assert

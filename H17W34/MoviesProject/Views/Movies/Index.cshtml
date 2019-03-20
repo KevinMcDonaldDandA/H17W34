@@ -9,6 +9,18 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+
+@using (Html.BeginForm("Index", "Movies", FormMethod.Get))
+{
+
+    <div class="form-horizontal">
+        <div class="form-group">
+            <div class="col-md-offset-6 col-md-6">
+                @Html.TextBox("search", null, htmlAttributes: new { @class = "form-control col-md-9", autocomplete = "off" })<input type="submit" value="Search" class="btn btn-default col-md-3" />
+            </div>
+        </div>
+    </div>
+}
 <table class="table">
     <tr>
         <th>
@@ -50,3 +62,7 @@
     }
 
 </table>
+@if (ViewBag.Search != null)
+{
+    @Html.ActionLink("Return to Full List", "Index")
+}

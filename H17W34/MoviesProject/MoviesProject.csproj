@@ -146,6 +146,10 @@
     <Compile Include="Migrations\201903131309181_DirectorDoB.Designer.cs">
       <DependentUpon>201903131309181_DirectorDoB.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201904151111276_MovieImage.cs" />
+    <Compile Include="Migrations\201904151111276_MovieImage.Designer.cs">
+      <DependentUpon>201904151111276_MovieImage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AppDbContext.cs" />
     <Compile Include="Models\Director.cs" />
@@ -264,6 +268,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201903131309181_DirectorDoB.resx">
       <DependentUpon>201903131309181_DirectorDoB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904151111276_MovieImage.resx">
+      <DependentUpon>201904151111276_MovieImage.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

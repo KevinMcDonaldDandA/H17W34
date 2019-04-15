@@ -54,7 +54,9 @@
     <div class="form-group">
         @Html.LabelFor(model => model.Movie.ImagePath, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            <input type="file" class="form-control" name="file" accept="image/png,image/jpg,image/jpeg" id="picFile" />
+            <label class="btn btn-primary btn-file">
+                Browse <input type="file" style="display: none;" name="file" accept="image/png,image/jpg,image/jpeg" id="picFile">
+            </label>
             @Html.ValidationMessageFor(model => model.Movie.ImagePath, "", new { @class = "text-danger" })
         </div>
     </div>

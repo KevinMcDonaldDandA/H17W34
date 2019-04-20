@@ -12,8 +12,10 @@ using MoviesProject.Models;
 using MoviesProject.ViewModels;
 using System;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Web;
 using System.Web.Mvc;
 
 namespace MoviesProject.Controllers
@@ -78,7 +80,7 @@ namespace MoviesProject.Controllers
         // POST: Movies/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Movie movie)
+        public ActionResult Create(Movie movie, HttpPostedFileBase file)
         {
             if (ModelState.IsValid)
             {
@@ -96,12 +98,25 @@ namespace MoviesProject.Controllers
                 }
                 else
                 {
+                    if (file != null && file.ContentLength > 0)
+                    {
+                        SaveFile(movie, file);
+                    }
                     movieRepository.Save(movie);
                     return RedirectToAction("Index");
                 }
             }
 
             return View();
+        }
+
+        private void SaveFile(Movie movie, HttpPostedFileBase file)
+        {
+            var fileName = Path.GetFileName(file.FileName);
+            var path = Path.Combine(Server.MapPath("~/Images/"), fileName);
+            file.SaveAs(path);
+            
+            movie.ImagePath = file.FileName;
         }
 
         // GET: Movies/Edit/5
@@ -127,10 +142,16 @@ namespace MoviesProject.Controllers
         // POST: Movies/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Movie movie)
+        public ActionResult Edit(Movie movie, HttpPostedFileBase file)
         {
             if (ModelState.IsValid)
             {
+                if(file != null && file.ContentLength > 0)
+                {
+                    DeleteFile(movie);
+                    SaveFile(movie, file);
+                }
+                
                 movieRepository.Save(movie);
                 return RedirectToAction("Index");
             }
@@ -164,7 +185,17 @@ namespace MoviesProject.Controllers
         {
             Movie movie = movieRepository.Find(id);
             movieRepository.Delete(movie);
+            DeleteFile(movie);
             return RedirectToAction("Index");
+        }
+
+        private void DeleteFile(Movie movie)
+        {
+            var fullPath = Request.MapPath("~/Images/" + movie.ImagePath);
+            if (System.IO.File.Exists(fullPath))
+            {
+                System.IO.File.Delete(fullPath);
+            }
         }
 
         protected override void Dispose(bool disposing)

@@ -21,6 +21,8 @@ namespace MoviesProject.Models
         public string Summary { get; set; }
         [Display(Name ="User Rating")]
         public double UserRating { get; set; }
+        [Display(Name ="Movie Poster")]
+        public string ImagePath { get; set; }
 
         //  Director FK
         public int DirectorId { get; set; }

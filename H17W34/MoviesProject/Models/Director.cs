@@ -31,6 +31,9 @@ namespace MoviesProject.Models
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public System.DateTime DoB { get; set; }
 
+        [Display(Name = "Oscar Winner")]
+        public bool OscarWinner { get; set; }
+
         [NotMapped]
         public string Fullname {
             get {

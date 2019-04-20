@@ -34,6 +34,12 @@
             @Html.DisplayFor(model => model.DoB)
         </dd>
 
+        @if (Model.OscarWinner)
+        {
+            <dt></dt>
+            <dd>Academy Award Winner</dd>
+        }
+
     </dl>
 </div>
 <p>

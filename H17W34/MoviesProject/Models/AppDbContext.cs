@@ -18,6 +18,8 @@ namespace MoviesProject.Models
         public DbSet<Director> Directors { get; set; }
         public DbSet<Movie> Movies { get; set; }
 
+        public DbSet<Actor> Actors { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder) { }
     }
 }

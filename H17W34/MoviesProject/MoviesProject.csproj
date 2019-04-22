@@ -159,6 +159,10 @@
     <Compile Include="Migrations\201904220950004_AddedActorModel.Designer.cs">
       <DependentUpon>201904220950004_AddedActorModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201904221100402_MovieActorRelationship.cs" />
+    <Compile Include="Migrations\201904221100402_MovieActorRelationship.Designer.cs">
+      <DependentUpon>201904221100402_MovieActorRelationship.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Actor.cs" />
     <Compile Include="Models\AppDbContext.cs" />
@@ -171,7 +175,7 @@
     <Compile Include="Models\Interfaces\IMovieRepository.cs" />
     <Compile Include="Models\Movie.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModels\MovieDirectors.cs" />
+    <Compile Include="ViewModels\CreateMovieVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\ProjectDb.mdf" />
@@ -294,6 +298,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201904220950004_AddedActorModel.resx">
       <DependentUpon>201904220950004_AddedActorModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904221100402_MovieActorRelationship.resx">
+      <DependentUpon>201904221100402_MovieActorRelationship.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

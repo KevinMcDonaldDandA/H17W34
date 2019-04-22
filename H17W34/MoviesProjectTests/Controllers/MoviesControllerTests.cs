@@ -87,7 +87,7 @@ namespace MoviesProject.Controllers.Tests
 
             //  Act
             var result = controller.Create() as ViewResult;
-            MovieDirectors md = result.Model as MovieDirectors;
+            CreateMovieVM md = result.Model as CreateMovieVM;
             var actual = md.Directors.Count;
 
             //  Assert
@@ -149,7 +149,7 @@ namespace MoviesProject.Controllers.Tests
 
             //  Act
             var result = controller.Edit(1) as ViewResult;
-            var model = result.Model as MovieDirectors;
+            var model = result.Model as CreateMovieVM;
             var actual = model.Movie.Title;
 
             //  Assert

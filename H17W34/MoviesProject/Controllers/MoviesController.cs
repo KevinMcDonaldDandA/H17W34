@@ -24,11 +24,13 @@ namespace MoviesProject.Controllers
     {
         private IMovieRepository movieRepository;
         private IDirectorRepository directorRepository;
+        private IActorRepository actorRepository;
 
         public MoviesController()
         {
             movieRepository = new EFMovieRepository();
             directorRepository = new EFDirectorRepository();
+            actorRepository = new EFActorRepository();
         }
 
         public MoviesController(IMovieRepository mockMovieRepo, IDirectorRepository mockDirectorRepo)
@@ -54,10 +56,11 @@ namespace MoviesProject.Controllers
         public ActionResult Create()
         {
             //  Using a ViewModel
-            MovieDirectors md = new MovieDirectors
+            CreateMovieVM md = new CreateMovieVM
             {
                 Movie = new Movie(),
-                Directors = directorRepository.Directors.ToList()
+                Directors = directorRepository.Directors.ToList(),
+                Actors = actorRepository.Actors.ToList()
             };
             return View(md);
         }
@@ -84,7 +87,7 @@ namespace MoviesProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                MovieDirectors md = new MovieDirectors
+                CreateMovieVM md = new CreateMovieVM
                 {
                     Movie = movie,
                     Directors = directorRepository.Directors.ToList()
@@ -131,7 +134,7 @@ namespace MoviesProject.Controllers
             {
                 return HttpNotFound();
             }
-            MovieDirectors md = new MovieDirectors
+            CreateMovieVM md = new CreateMovieVM
             {
                 Movie = movie,
                 Directors = directorRepository.Directors.ToList()
@@ -155,7 +158,7 @@ namespace MoviesProject.Controllers
                 movieRepository.Save(movie);
                 return RedirectToAction("Index");
             }
-            MovieDirectors md = new MovieDirectors
+            CreateMovieVM md = new CreateMovieVM
             {
                 Movie = movie,
                 Directors = directorRepository.Directors.ToList()

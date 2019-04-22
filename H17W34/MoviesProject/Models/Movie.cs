@@ -8,6 +8,7 @@
 *       Copyright © Kevin McDonald 2019. All rights reserved.
 */
 
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace MoviesProject.Models
@@ -30,6 +31,12 @@ namespace MoviesProject.Models
         //  Navigation Property
         public Director Director { get; set; }
 
+        public virtual ICollection<Actor> Actors { get; set; }
+
+        public Movie()
+        {
+            Actors = new List<Actor>();
+        }
     }
 }
 //------------------------------- End of File -------------------------------​

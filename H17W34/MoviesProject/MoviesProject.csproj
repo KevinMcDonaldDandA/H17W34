@@ -159,6 +159,10 @@
     <Compile Include="Migrations\201904220950004_AddedActorModel.Designer.cs">
       <DependentUpon>201904220950004_AddedActorModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201904222000322_ActorMovieReleationship.cs" />
+    <Compile Include="Migrations\201904222000322_ActorMovieReleationship.Designer.cs">
+      <DependentUpon>201904222000322_ActorMovieReleationship.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Actor.cs" />
     <Compile Include="Models\AppDbContext.cs" />
@@ -294,6 +298,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201904220950004_AddedActorModel.resx">
       <DependentUpon>201904220950004_AddedActorModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201904222000322_ActorMovieReleationship.resx">
+      <DependentUpon>201904222000322_ActorMovieReleationship.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

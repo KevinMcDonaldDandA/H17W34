@@ -8,6 +8,7 @@
 *       Copyright © Kevin McDonald 2019. All rights reserved.
 */
 
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace MoviesProject.Models
@@ -23,6 +24,7 @@ namespace MoviesProject.Models
         public double UserRating { get; set; }
         [Display(Name ="Movie Poster")]
         public string ImagePath { get; set; }
+        public virtual ICollection<Actor> Actors { get; set; }
 
         //  Director FK
         public int DirectorId { get; set; }

@@ -4,47 +4,28 @@
     ViewBag.Title = "Details";
 }
 
+@section Styles{
+    <style>
+        .actors {
+            padding: 0;
+            margin: 0;
+        }
+
+            .actors li {
+                display: inline-block;
+            }
+
+                .actors li::after {
+                    content: ", ";
+                }
+
+                .actors li:last-child:after {
+                    content: "";
+                }
+    </style>
+}
+
 <h2>Details</h2>
-@*
-    <div>
-        <h4>Movie</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.Director)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Director.Fullname)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Title)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Title)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Summary)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Summary)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.UserRating)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.UserRating)
-            </dd>
-
-        </dl>
-    </div>
-*@
 <div class="row">
     <div class="col-md-2 col-sm-12 p-md-2 p-sm-5">
         @if (!string.IsNullOrEmpty(Model.ImagePath))
@@ -52,11 +33,20 @@
             <img class="rounded" width="100%" height="auto" src="@Url.Content($"~/Images/{Model.ImagePath}")" alt="" />
         }
     </div>
-    <div class="d-flex flex-column col-md-10 col-sm-12">
-        <div class="p-2"><h3>@Html.DisplayFor(model => model.Title)</h3></div>
-        <div class="p-2"><h4>@Html.DisplayFor(model => model.Director.Fullname)</h4></div>
-        <div class="p-2">@Html.DisplayFor(model => model.Summary)</div>
-        <div class="p-2 align-self-end"><h5>@Html.DisplayFor(model => model.UserRating)</h5></div>
+    <div class="d-flex flex-column col-md-10 col-sm-12 p-4">
+        <div><h3>@Html.DisplayFor(model => model.Title)</h3></div>
+        <div><h4>Director: @Html.DisplayFor(model => model.Director.Fullname)</h4></div>
+        <div>
+            <ul class="actors">
+                <strong>Starring:</strong>
+                @foreach (var actor in Model.Actors)
+                {
+                    <li>@Html.ActionLink(@actor.Fullname, "Details", "Actors", new { id = actor.ID }, null)</li>
+                }
+            </ul>
+        </div>
+        <div>@Html.DisplayFor(model => model.Summary)</div>
+        <div class="align-self-end"><h5>@Html.DisplayFor(model => model.UserRating)</h5></div>
     </div>
 </div>
 <p>

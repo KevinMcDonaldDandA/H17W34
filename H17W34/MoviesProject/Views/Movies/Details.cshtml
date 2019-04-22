@@ -5,46 +5,6 @@
 }
 
 <h2>Details</h2>
-@*
-    <div>
-        <h4>Movie</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.Director)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Director.Fullname)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Title)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Title)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Summary)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Summary)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.UserRating)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.UserRating)
-            </dd>
-
-        </dl>
-    </div>
-*@
 <div class="row">
     <div class="col-md-2 col-sm-12 p-md-2 p-sm-5">
         @if (!string.IsNullOrEmpty(Model.ImagePath))
@@ -56,6 +16,13 @@
         <div class="p-2"><h3>@Html.DisplayFor(model => model.Title)</h3></div>
         <div class="p-2"><h4>@Html.DisplayFor(model => model.Director.Fullname)</h4></div>
         <div class="p-2">@Html.DisplayFor(model => model.Summary)</div>
+        <div class="p-2">
+            Starring: @foreach (var actor in Model.Actors)
+            {
+                @actor.Fullname
+            }
+
+        </div>
         <div class="p-2 align-self-end"><h5>@Html.DisplayFor(model => model.UserRating)</h5></div>
     </div>
 </div>

@@ -44,7 +44,7 @@ namespace MoviesProject.Models
 
         public Movie GetMovieDetails(int? id)
         {
-            return db.Movies.Include(m => m.Director).Where(m => m.ID == id).SingleOrDefault();
+            return db.Movies.Include(m => m.Director).Include(m => m.Actors).Where(m => m.ID == id).SingleOrDefault();
         }
 
         public Movie Save(Movie movie)

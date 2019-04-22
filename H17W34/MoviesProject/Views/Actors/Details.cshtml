@@ -5,6 +5,27 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@section Styles{
+    <style>
+        .movies {
+            padding: 0;
+            margin: 0;
+        }
+
+        .movies li {
+            display: inline-block;
+        }
+
+        .movies li:after {
+            content: ", ";
+        }
+
+        .movies li:last-child:after {
+            content: "";
+        }
+    </style>
+}
+
 <h2>Details</h2>
 
 <div>
@@ -42,7 +63,13 @@
         <dd>
             @Html.DisplayFor(model => model.Gender)
         </dd>
-
+        <dt>Movies</dt>
+            <ul class="movies">
+                @foreach (var movie in Model.Movies)
+                {
+                    <li>@Html.ActionLink(movie.Title, "Details", "Movies", new { id = movie.ID }, null)</li>
+                }
+            </ul>
     </dl>
 </div>
 <p>

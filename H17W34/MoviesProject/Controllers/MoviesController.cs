@@ -186,29 +186,14 @@ namespace MoviesProject.Controllers
         {
             if (cm == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-
-
             if (ModelState.IsValid)
             {
                 bool movieExists = movieRepository.CheckMovieExits(cm.Movie.Title);
-                if (movieExists)
-                {
-                    ModelState.AddModelError(string.Empty, "Movie already exists in Database");
-                    return View(cm);
-                }
 
                 var movieToUpdate = movieRepository.Movies
                     .Include(i => i.Actors).First(i => i.ID == cm.Movie.ID);
 
-                //  Gets record from db - presumably to put in on the content.
-                //  var usedJobTags = _db.JobTags.Where(m => jobpostView.SelectedJobTags.Contains(m.Id)).ToList();
-
-
-                //  retrieves the jobIds from the VM
                 var selectedActors = new HashSet<int>(cm.SelectedActors);
-                //  This seems super inefficient - Basically it removes tags from the job then readds the selected ones.
-                //  Iterates through EVERY tag in the DB.
-                //  Code processing intensive - generally faster than DB operations however.
                 foreach (Actor actor in actorRepository.Actors)
                 {
                     if (!selectedActors.Contains(actor.ID))
@@ -224,13 +209,12 @@ namespace MoviesProject.Controllers
                         {
                             movieToUpdate.Actors.Add(actor);
                         }
-                    }
-                    if (file != null && file.ContentLength > 0)
-                    {
-                        SaveFile(movieToUpdate, file);
-                    }
-                    movieRepository.Save(movieToUpdate);
-
+                    }                  
+                }
+                movieRepository.Save(movieToUpdate);
+                if (file != null && file.ContentLength > 0)
+                {
+                    SaveFile(movieToUpdate, file);
                 }
 
                 return RedirectToAction("Index");

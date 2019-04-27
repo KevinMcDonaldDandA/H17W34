@@ -14,7 +14,12 @@ namespace MoviesProject.Models
 {
     public class EFDirectorRepository : IDirectorRepository
     {
-        AppDbContext db = new AppDbContext();
+        AppDbContext db;
+
+        public EFDirectorRepository(AppDbContext _db)
+        {
+            db = _db;
+        }
 
         public IQueryable<Director> Directors { get { return db.Directors; } }
 

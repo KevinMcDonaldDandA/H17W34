@@ -11,6 +11,7 @@
 using MoviesProject.Models;
 using MoviesProject.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
@@ -28,9 +29,10 @@ namespace MoviesProject.Controllers
 
         public MoviesController()
         {
-            movieRepository = new EFMovieRepository();
-            directorRepository = new EFDirectorRepository();
-            actorRepository = new EFActorRepository();
+            var appDbContext = new AppDbContext();
+            movieRepository = new EFMovieRepository(appDbContext);
+            directorRepository = new EFDirectorRepository(appDbContext);
+            actorRepository = new EFActorRepository(appDbContext);
         }
 
         public MoviesController(IMovieRepository mockMovieRepo, IDirectorRepository mockDirectorRepo)
@@ -59,9 +61,16 @@ namespace MoviesProject.Controllers
             CreateMovieVM md = new CreateMovieVM
             {
                 Movie = new Movie(),
-                Directors = directorRepository.Directors.ToList(),
-                Actors = actorRepository.Actors.ToList()
+                Directors = directorRepository.Directors.ToList()
             };
+            var allActors = actorRepository.Actors.ToList();
+
+            md.AllActors = allActors.Select(a => new SelectListItem
+            {
+                Text = a.Fullname,
+                Value = a.ID.ToString()
+            });
+
             return View(md);
         }
 
@@ -83,34 +92,59 @@ namespace MoviesProject.Controllers
         // POST: Movies/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Movie movie, HttpPostedFileBase file)
+        public ActionResult Create(CreateMovieVM cm, HttpPostedFileBase file)
         {
+            if (cm == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+
+
             if (ModelState.IsValid)
             {
-                CreateMovieVM md = new CreateMovieVM
-                {
-                    Movie = movie,
-                    Directors = directorRepository.Directors.ToList()
-                };
-
-                bool movieExists = movieRepository.CheckMovieExits(movie.Title);
+                bool movieExists = movieRepository.CheckMovieExits(cm.Movie.Title);
                 if (movieExists)
                 {
                     ModelState.AddModelError(string.Empty, "Movie already exists in Database");
-                    return View(md);
+                    return View(cm);
                 }
-                else
-                {
+
+                var movieToCreate = cm.Movie;
+                
+                    //  Gets record from db - presumably to put in on the content.
+                    //  var usedJobTags = _db.JobTags.Where(m => jobpostView.SelectedJobTags.Contains(m.Id)).ToList();
+
+
+                    //  retrieves the jobIds from the VM
+                    var selectedActors = new HashSet<int>(cm.SelectedActors);
+                    //  This seems super inefficient - Basically it removes tags from the job then readds the selected ones.
+                    //  Iterates through EVERY tag in the DB.
+                    //  Code processing intensive - generally faster than DB operations however.
+                    foreach (Actor actor in actorRepository.Actors)
+                    {
+                        if (!selectedActors.Contains(actor.ID))
+                        {
+                            if (movieToCreate.Actors.Contains(actor))
+                            {
+                                movieToCreate.Actors.Remove(actor);
+                            }
+                        }
+                        else
+                        {
+                            if (!movieToCreate.Actors.Contains(actor))
+                            {
+                                movieToCreate.Actors.Add(actor);
+                            }
+                        }
                     if (file != null && file.ContentLength > 0)
                     {
-                        SaveFile(movie, file);
+                        SaveFile(movieToCreate, file);
                     }
-                    movieRepository.Save(movie);
-                    return RedirectToAction("Index");
+                    movieRepository.Save(movieToCreate);
+                    
                 }
-            }
 
-            return View();
+                return RedirectToAction("Index");
+            }
+            return View(cm);
         }
 
         private void SaveFile(Movie movie, HttpPostedFileBase file)
@@ -125,45 +159,83 @@ namespace MoviesProject.Controllers
         // GET: Movies/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+            var cm = new CreateMovieVM
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Movie movie = movieRepository.Find((int)id);
-            if (movie == null)
-            {
-                return HttpNotFound();
-            }
-            CreateMovieVM md = new CreateMovieVM
-            {
-                Movie = movie,
+                Movie = movieRepository.Find((int)id),
                 Directors = directorRepository.Directors.ToList()
             };
-            return View(md);
+
+
+            if (cm.Movie == null)
+                return HttpNotFound();
+
+            var allActors = actorRepository.Actors.ToList();
+
+            cm.AllActors = allActors.Select(a => new SelectListItem {
+                Text = a.Fullname,
+                Value = a.ID.ToString()
+            });
+            
+            return View(cm);
         }
 
         // POST: Movies/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Movie movie, HttpPostedFileBase file)
+        public ActionResult Edit(CreateMovieVM cm, HttpPostedFileBase file)
         {
+            if (cm == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+
+
             if (ModelState.IsValid)
             {
-                if(file != null && file.ContentLength > 0)
+                bool movieExists = movieRepository.CheckMovieExits(cm.Movie.Title);
+                if (movieExists)
                 {
-                    DeleteFile(movie);
-                    SaveFile(movie, file);
+                    ModelState.AddModelError(string.Empty, "Movie already exists in Database");
+                    return View(cm);
                 }
-                
-                movieRepository.Save(movie);
+
+                var movieToUpdate = movieRepository.Movies
+                    .Include(i => i.Actors).First(i => i.ID == cm.Movie.ID);
+
+                //  Gets record from db - presumably to put in on the content.
+                //  var usedJobTags = _db.JobTags.Where(m => jobpostView.SelectedJobTags.Contains(m.Id)).ToList();
+
+
+                //  retrieves the jobIds from the VM
+                var selectedActors = new HashSet<int>(cm.SelectedActors);
+                //  This seems super inefficient - Basically it removes tags from the job then readds the selected ones.
+                //  Iterates through EVERY tag in the DB.
+                //  Code processing intensive - generally faster than DB operations however.
+                foreach (Actor actor in actorRepository.Actors)
+                {
+                    if (!selectedActors.Contains(actor.ID))
+                    {
+                        if (movieToUpdate.Actors.Contains(actor))
+                        {
+                            movieToUpdate.Actors.Remove(actor);
+                        }
+                    }
+                    else
+                    {
+                        if (!movieToUpdate.Actors.Contains(actor))
+                        {
+                            movieToUpdate.Actors.Add(actor);
+                        }
+                    }
+                    if (file != null && file.ContentLength > 0)
+                    {
+                        SaveFile(movieToUpdate, file);
+                    }
+                    movieRepository.Save(movieToUpdate);
+
+                }
+
                 return RedirectToAction("Index");
             }
-            CreateMovieVM md = new CreateMovieVM
-            {
-                Movie = movie,
-                Directors = directorRepository.Directors.ToList()
-            };
-            return View(md);
+            return View(cm);
         }
 
         // GET: Movies/Delete/5

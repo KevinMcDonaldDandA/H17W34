@@ -22,7 +22,8 @@ namespace MoviesProject.Controllers
 
         public DirectorsController()
         {
-            context = new EFDirectorRepository();
+            var appDbContext = new AppDbContext();
+            context = new EFDirectorRepository(appDbContext);
         }
 
         // GET: Directors

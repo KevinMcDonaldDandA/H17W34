@@ -14,7 +14,12 @@ namespace MoviesProject.Models
 {
     public class EFMovieRepository : IMovieRepository
     {
-        AppDbContext db = new AppDbContext();
+        AppDbContext db;
+
+        public EFMovieRepository(AppDbContext _db)
+        {
+            db = _db;
+        }
 
         public IQueryable<Movie> Movies { get { return db.Movies; } }
 
@@ -39,7 +44,7 @@ namespace MoviesProject.Models
 
         public Movie Find(int id)
         {
-            return db.Movies.Find(id);
+            return db.Movies.Include(m => m.Actors).Where(m => m.ID == id).FirstOrDefault();
         }
 
         public Movie GetMovieDetails(int? id)

@@ -16,7 +16,8 @@ namespace MoviesProject.Controllers
 
         public ActorsController()
         {
-            actorRepository = new EFActorRepository();
+            var appDbContext = new AppDbContext();
+            actorRepository = new EFActorRepository(appDbContext);
         }
 
         public ActorsController(IActorRepository mockRepository)

@@ -8,7 +8,12 @@ namespace MoviesProject.Models
 {
     public class EFActorRepository : IActorRepository
     {
-        AppDbContext db = new AppDbContext();
+        AppDbContext db;
+
+        public EFActorRepository(AppDbContext _db)
+        {
+            db = _db;
+        }
 
         public IQueryable<Actor> Actors { get { return db.Actors; } }
 

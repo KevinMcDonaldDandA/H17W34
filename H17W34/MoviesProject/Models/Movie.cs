@@ -35,7 +35,7 @@ namespace MoviesProject.Models
 
         public Movie()
         {
-            Actors = new List<Actor>();
+            Actors = new HashSet<Actor>();
         }
     }
 }

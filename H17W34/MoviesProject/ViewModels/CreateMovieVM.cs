@@ -10,6 +10,8 @@
 
 using MoviesProject.Models;
 using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace MoviesProject.ViewModels
 {
@@ -18,7 +20,21 @@ namespace MoviesProject.ViewModels
         public Movie Movie { get; set; }
         public List<Director> Directors { get; set; }
 
-        public List<Actor> Actors { get; set; }
+        public IEnumerable<SelectListItem> AllActors { get; set; }
+
+        private List<int> _selectedActors;
+        public List<int> SelectedActors
+        {
+            get
+            {
+                if (_selectedActors == null)
+                {
+                    _selectedActors = Movie.Actors.Select(m => m.ID).ToList();
+                }
+                return _selectedActors;
+            }
+            set { _selectedActors = value; }
+        }
     }
 }
 //------------------------------- End of File -------------------------------​

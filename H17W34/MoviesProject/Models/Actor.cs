@@ -24,5 +24,10 @@ namespace MoviesProject.Models
         public string Fullname { get { return $"{FName} {LName}";  } }
 
         public virtual ICollection<Movie> Movies { get; set; }
+
+        public Actor()
+        {
+            Movies = new HashSet<Movie>();
+        }
     }
 }

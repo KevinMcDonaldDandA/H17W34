@@ -4,6 +4,27 @@
     ViewBag.Title = "Details";
 }
 
+@section Styles{
+    <style>
+        .actors {
+            padding: 0;
+            margin: 0;
+        }
+
+            .actors li {
+                display: inline-block;
+            }
+
+                .actors li::after {
+                    content: ", ";
+                }
+
+                .actors li:last-child:after {
+                    content: "";
+                }
+    </style>
+}
+
 <h2>Details</h2>
 <div class="row">
     <div class="col-md-2 col-sm-12 p-md-2 p-sm-5">
@@ -17,11 +38,13 @@
         <div class="p-2"><h4>@Html.DisplayFor(model => model.Director.Fullname)</h4></div>
         <div class="p-2">@Html.DisplayFor(model => model.Summary)</div>
         <div class="p-2">
-            Starring: @foreach (var actor in Model.Actors)
-            {
-                @actor.Fullname
-            }
-
+            <ul class="actors">
+                <strong>Starring:</strong>
+                @foreach (var actor in Model.Actors)
+                {
+                    <li>@Html.ActionLink(@actor.Fullname, "Details", "Actors", new { id = actor.ID }, null)</li>
+                }
+            </ul>
         </div>
         <div class="p-2 align-self-end"><h5>@Html.DisplayFor(model => model.UserRating)</h5></div>
     </div>

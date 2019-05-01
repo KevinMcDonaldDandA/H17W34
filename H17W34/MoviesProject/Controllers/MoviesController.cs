@@ -188,8 +188,6 @@ namespace MoviesProject.Controllers
 
             if (ModelState.IsValid)
             {
-                bool movieExists = movieRepository.CheckMovieExits(cm.Movie.Title);
-
                 var movieToUpdate = movieRepository.Movies
                     .Include(i => i.Actors).First(i => i.ID == cm.Movie.ID);
 
